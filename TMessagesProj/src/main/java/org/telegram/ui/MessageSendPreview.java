@@ -215,7 +215,7 @@ public class MessageSendPreview extends Dialog implements NotificationCenter.Not
             }
         });
 
-        iBlur3SourceBitmap = new BlurredBackgroundSourceBitmap();
+        iBlur3SourceBitmap = new BlurredBackgroundSourceBitmap().withLiquidGlass();
         iBlur3Factory = new BlurredBackgroundDrawableViewFactory(iBlur3SourceBitmap);
         iBlur3Factory.setSourceRootView(new ViewPositionWatcher(windowView), windowView);
 

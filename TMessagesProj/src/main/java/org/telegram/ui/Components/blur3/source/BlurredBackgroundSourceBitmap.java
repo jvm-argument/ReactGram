@@ -7,7 +7,13 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Shader;
 
+import android.os.Build;
+
 import androidx.annotation.Nullable;
+
+import org.telegram.messenger.LiteMode;
+import org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawableRenderNode;
+import me.vkryl.core.reference.ReferenceList;
 
 import org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable;
 import org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawableSource;
@@ -20,6 +26,24 @@ public class BlurredBackgroundSourceBitmap implements BlurredBackgroundSource {
 
     public BlurredBackgroundSourceBitmap() {
         bitmapPaint.setFilterBitmap(true);
+    }
+
+    private boolean liquidGlass;
+    private final ReferenceList<BlurredBackgroundDrawableRenderNode> glassDrawables = new ReferenceList<>();
+
+    /**
+     * Opt in to the liquid glass refraction (API 33+, LiteMode.FLAG_LIQUID_GLASS) for drawables created from this
+     * source. Used by context menus and previews that blur a snapshot of the screen.
+     */
+    public BlurredBackgroundSourceBitmap withLiquidGlass() {
+        liquidGlass = true;
+        return this;
+    }
+
+    private void invalidateGlassDrawables() {
+        for (BlurredBackgroundDrawableRenderNode d : glassDrawables) {
+            d.invalidateDisplayList();
+        }
     }
 
     public void setBitmap(Bitmap bitmap) {
@@ -37,10 +61,12 @@ public class BlurredBackgroundSourceBitmap implements BlurredBackgroundSource {
             bitmapPaint.setShader(bitmapShader);
             updateMatrix();
         }
+        invalidateGlassDrawables();
     }
 
     public void setMatrix(Matrix matrix) {
         bitmapMatrix.set(matrix);
+        invalidateGlassDrawables();
     }
 
     public Matrix getMatrix() {
@@ -69,6 +95,12 @@ public class BlurredBackgroundSourceBitmap implements BlurredBackgroundSource {
 
     @Override
     public BlurredBackgroundDrawable createDrawable() {
+        if (liquidGlass && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) {
+            final BlurredBackgroundDrawableRenderNode drawable = new BlurredBackgroundDrawableRenderNode(this);
+            drawable.setLiquidGlassEffectAllowed();
+            glassDrawables.add(drawable);
+            return drawable;
+        }
         return new BlurredBackgroundDrawableSource(this);
     }
 

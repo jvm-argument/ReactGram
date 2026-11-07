@@ -47,6 +47,19 @@ recording blob) animate non-rectangular shapes.
 
 `TMessagesProj` depends on it; `blur3/LiquidGlassEffect` is now a thin adapter that fills `GlassParams`.
 
+## 3a. Context menus and previews (bitmap sources)
+
+Menus that blur a snapshot of the screen (`ItemOptions`, `ScrimOptions`, `PollItemMenu`, `TodoItemMenu`,
+`MessageSendPreview`, `ContentPreviewViewer`, `AvatarPreviewer`, the message and profile scrims) used
+`BlurredBackgroundSourceBitmap`, whose drawable was a plain `BlurredBackgroundDrawableSource` without the shader.
+`BlurredBackgroundSourceBitmap.withLiquidGlass()` now makes it create a `BlurredBackgroundDrawableRenderNode` with the
+glass effect (API 33+ and `LiteMode.FLAG_LIQUID_GLASS`), and invalidates those drawables when the bitmap or matrix changes.
+The opt-in is a one-line change at each construction site; other bitmap users (wallpaper, passcode) are untouched.
+
+Already on glass before this work and left as is: `DialogsActivity`, `MainTabsActivity`, `ChatActivity` bars and input,
+`ChatAttachAlert`, `ShareAlert`, `EmojiView`, `ProfileActivity`, `TopicsFragment`. Not on glass: the generic
+`BottomSheet`/`AlertDialog` and `ActionBarPopupWindow` menus opened from the action bar (3-dot menus).
+
 ## 4. Ghost Mode (from AyuGram4A)
 
 AyuGram intercepts requests in `ConnectionsManager.sendRequestInternal`. ReactGram does the same through one call,

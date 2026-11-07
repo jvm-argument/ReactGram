@@ -1271,7 +1271,7 @@ public class ItemOptions {
         }
 
         if ((blur || blurForMenu) && scrimBlur3SourceBitmap == null) {
-            scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap();
+            scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap().withLiquidGlass();
         }
 
         ViewGroup container = pointContainer = this.container == null ? fragment.getParentLayout().getOverlayContainerView() : this.container;

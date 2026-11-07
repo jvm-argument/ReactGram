@@ -1025,7 +1025,7 @@ public class ChatActivity extends BaseFragment implements
         destroyTextureView();
     };
 
-    private final BlurredBackgroundSourceBitmap scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap();
+    private final BlurredBackgroundSourceBitmap scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap().withLiquidGlass();
     private final BlurredBackgroundDrawableViewFactory scrimBlur3Factory = new BlurredBackgroundDrawableViewFactory(scrimBlur3SourceBitmap);
     private Bitmap scrimBlurBitmap;
     private BitmapShader scrimBlurBitmapShader;

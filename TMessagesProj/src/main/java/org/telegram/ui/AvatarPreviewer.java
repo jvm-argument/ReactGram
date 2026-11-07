@@ -384,7 +384,7 @@ public class AvatarPreviewer {
         private final ActionBarPopupWindow.ActionBarPopupWindowLayout menu;
         private final Callback callback;
         private final Theme.ResourcesProvider resourcesProvider;
-        private final BlurredBackgroundSourceBitmap iBlur3SourceBitmap = new BlurredBackgroundSourceBitmap();
+        private final BlurredBackgroundSourceBitmap iBlur3SourceBitmap = new BlurredBackgroundSourceBitmap().withLiquidGlass();
         private final BlurredBackgroundDrawableViewFactory iBlur3Factory = new BlurredBackgroundDrawableViewFactory(iBlur3SourceBitmap);
 
         private AnimatorSet openAnimator;

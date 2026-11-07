@@ -156,7 +156,7 @@ public class ScrimOptions extends Dialog {
         containerView.setClipToPadding(false);
         windowView.addView(containerView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.FILL));
 
-        iBlur3SourceBitmap = new BlurredBackgroundSourceBitmap();
+        iBlur3SourceBitmap = new BlurredBackgroundSourceBitmap().withLiquidGlass();
         iBlur3Factory = new BlurredBackgroundDrawableViewFactory(iBlur3SourceBitmap);
         iBlur3Factory.setSourceRootView(new ViewPositionWatcher(windowView), windowView);
 

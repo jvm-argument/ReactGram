@@ -16999,7 +16999,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private final @NonNull BlurredBackgroundSourceColor iBlur3SourceColor;
     private final @NonNull BlurredBackgroundDrawableViewFactory iBlur3FactoryLiquidGlass;
 
-    private final BlurredBackgroundSourceBitmap scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap();
+    private final BlurredBackgroundSourceBitmap scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap().withLiquidGlass();
     private final BlurredBackgroundDrawableViewFactory scrimBlur3Factory = new BlurredBackgroundDrawableViewFactory(scrimBlur3SourceBitmap);
 
     private ViewPositionWatcher viewPositionWatcher;

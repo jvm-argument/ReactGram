@@ -338,7 +338,7 @@ public class ContentPreviewViewer {
 
     private int currentAccount;
 
-    private final BlurredBackgroundSourceBitmap scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap();
+    private final BlurredBackgroundSourceBitmap scrimBlur3SourceBitmap = new BlurredBackgroundSourceBitmap().withLiquidGlass();
     private final BlurredBackgroundDrawableViewFactory scrimBlur3Factory = new BlurredBackgroundDrawableViewFactory(scrimBlur3SourceBitmap);
 
     private ColorDrawable backgroundDrawable = new ColorDrawable(0x71000000);
