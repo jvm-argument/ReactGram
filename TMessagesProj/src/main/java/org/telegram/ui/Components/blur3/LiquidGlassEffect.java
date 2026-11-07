@@ -1,40 +1,30 @@
 package org.telegram.ui.Components.blur3;
 
-import android.graphics.Color;
-import android.graphics.RenderEffect;
 import android.graphics.RenderNode;
-import android.graphics.RuntimeShader;
 
 import androidx.annotation.RequiresApi;
 
-import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.R;
+import com.reactgram.liquidglass.GlassParams;
+import com.reactgram.liquidglass.GlassShaderEffect;
 
+import org.telegram.messenger.AndroidUtilities;
+import org.telegram.ui.ActionBar.Theme;
+
+/**
+ * Thin adapter between the blur3 drawables and the {@code :liquidglass} module.
+ * Keeps the original call signature; the shader itself lives in {@link GlassShaderEffect}.
+ */
 @RequiresApi(api = 33)
 public class LiquidGlassEffect {
 
+    private final GlassShaderEffect effect;
+    private final GlassParams params = new GlassParams();
     private final RenderNode node;
-    private final RuntimeShader shader;
-    private RenderEffect effect;
 
     public LiquidGlassEffect(RenderNode node) {
         this.node = node;
-        final String code = AndroidUtilities.readRes(R.raw.liquid_glass_shader);
-        shader = new RuntimeShader(code);
-        node.setRenderEffect(effect = RenderEffect.createRuntimeShaderEffect(shader, "img"));
+        this.effect = new GlassShaderEffect(node);
     }
-
-    private float resolutionX, resolutionY;
-    private float centerX, centerY;
-    private float sizeX, sizeY;
-    private float radiusLeftTop;
-    private float radiusRightTop;
-    private float radiusRightBottom;
-    private float radiusLeftBottom;
-    private float thickness;
-    private float intensity;
-    private float index;
-    private int foregroundColor;
 
     public void update(
         float left, float top, float right, float bottom,
@@ -45,13 +35,7 @@ public class LiquidGlassEffect {
         float index,
         int foregroundColor
     ) {
-        float resolutionX = node.getWidth();
-        float resolutionY = node.getHeight();
-        float centerX = (left + right) / 2;
-        float centerY = (top + bottom) / 2;
-        float width = right - left, height = bottom - top;
-        float sizeX = width / 2;
-        float sizeY = height / 2;
+        final float width = right - left, height = bottom - top;
 
         if (radiusLeftTop + radiusLeftBottom > height) {
             float a = radiusLeftTop / (radiusLeftTop + radiusLeftBottom);
@@ -64,39 +48,26 @@ public class LiquidGlassEffect {
             radiusRightBottom = height * (1.0f - a);
         }
 
-        if (
-            Math.abs(this.resolutionX - resolutionX) > 0.1f ||
-            Math.abs(this.resolutionY - resolutionY) > 0.1f ||
-            Math.abs(this.centerX - centerX) > 0.1f ||
-            Math.abs(this.centerY - centerY) > 0.1f ||
-            Math.abs(this.sizeX - sizeX) > 0.1f ||
-            Math.abs(this.sizeY - sizeY) > 0.1f ||
-            Math.abs(this.radiusLeftTop - radiusLeftTop) > 0.1f ||
-            Math.abs(this.radiusRightTop - radiusRightTop) > 0.1f ||
-            Math.abs(this.radiusRightBottom - radiusRightBottom) > 0.1f ||
-            Math.abs(this.radiusLeftBottom - radiusLeftBottom) > 0.1f ||
-            Math.abs(this.thickness - thickness) > 0.1f ||
-            Math.abs(this.intensity - intensity) > 0.1f ||
-            Math.abs(this.index - index) > 0.1f ||
-            this.foregroundColor != foregroundColor
-        ) {
-            this.foregroundColor = foregroundColor;
+        final GlassParams p = params;
+        p.resolutionX = node.getWidth();
+        p.resolutionY = node.getHeight();
+        p.centerX = (left + right) / 2;
+        p.centerY = (top + bottom) / 2;
+        p.halfWidth = width / 2;
+        p.halfHeight = height / 2;
+        p.radiusRightBottom = radiusRightBottom;
+        p.radiusRightTop = radiusRightTop;
+        p.radiusLeftBottom = radiusLeftBottom;
+        p.radiusLeftTop = radiusLeftTop;
+        p.thickness = thickness;
+        p.refractIntensity = intensity;
+        p.refractIndex = index;
+        p.tintColor = foregroundColor;
 
-            final float a = Color.alpha(foregroundColor) / 255f;
-            final float r = Color.red(foregroundColor) / 255f * a;
-            final float g = Color.green(foregroundColor) / 255f * a;
-            final float b = Color.blue(foregroundColor) / 255f * a;
+        // iOS-style edge light: a thin highlight, dimmer on dark themes (LiquidGlassAppearance.rimDarkAppearanceScale).
+        p.rimWidth = Math.max(AndroidUtilities.dpf2(1.25f), 1f);
+        p.rimStrength = Theme.isCurrentThemeDark() ? 0.35f : 0.55f;
 
-            shader.setFloatUniform("resolution", this.resolutionX = resolutionX, this.resolutionY = resolutionY);
-            shader.setFloatUniform("center", this.centerX = centerX, this.centerY = centerY);
-            shader.setFloatUniform("size", this.sizeX = sizeX, this.sizeY = sizeY);
-            shader.setFloatUniform("radius", this.radiusRightBottom = radiusRightBottom, this.radiusRightTop = radiusRightTop, this.radiusLeftBottom = radiusLeftBottom, this.radiusLeftTop = radiusLeftTop);
-            shader.setFloatUniform("thickness", this.thickness = thickness);
-            shader.setFloatUniform("refract_intensity", this.intensity = intensity);
-            shader.setFloatUniform("refract_index", this.index = index);
-            shader.setFloatUniform("foreground_color_premultiplied", r, g, b, a);
-            node.setRenderEffect(effect = RenderEffect.createRuntimeShaderEffect(shader, "img"));
-        }
+        effect.update(p);
     }
-
 }

@@ -101,6 +101,7 @@ dependencies {
     api project(":TMessagesProj_Modules:media3:media-lib-decoder-ffmpeg")
     api project(":TMessagesProj_Modules:media3:media-lib-session")
     api project(':jlatexmath')
+    implementation project(':liquidglass')
 
 //    implementation 'com.google.mlkit:translate:17.0.3'
 

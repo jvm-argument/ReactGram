@@ -5,6 +5,7 @@ include ':TMessagesProj_AppHockeyApp'
 include ':TMessagesProj_AppStandalone'
 include ':TMessagesProj_AppTests'
 include ':jlatexmath'
+include ':liquidglass'
 project(':jlatexmath').projectDir = file('TMessagesProj/lib/jlatexmath/jlatexmath')
 
 dependencyResolutionManagement {
