@@ -7,7 +7,8 @@ package com.reactgram.liquidglass;
 public final class GlassTuning {
     private GlassTuning() {}
 
-    public static final float DEFAULT_TINT = 1f;
+    /** Telegram's own tint is ~85% opaque; ReactGram defaults to a much clearer glass (matches the settings preview). */
+    public static final float DEFAULT_TINT = 0.35f;
     public static final float DEFAULT_REFRACTION = 1f;
     public static final float DEFAULT_THICKNESS = 1f;
     public static final float DEFAULT_RIM = 1f;

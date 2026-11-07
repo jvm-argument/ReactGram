@@ -45,8 +45,12 @@ public final class PopupGlass {
             .setHasPadding(true)
             .setRadius(dp(12));
 
-        ScrimOptions.makeGlobalBlurBitmaps((bitmapBg, bitmapOptions) -> {
-            if (!window.isShowing()) {
+        // Half-resolution, almost unblurred snapshot of everything on screen except this popup itself:
+        // clear glass refracts recognisable content instead of a smear.
+        final java.util.List<View> exclude = new java.util.ArrayList<>();
+        exclude.add(layout.getRootView());
+        AndroidUtilities.makeGlobalBlurBitmap(bitmapOptions -> {
+            if (!window.isShowing() || bitmapOptions == null) {
                 return;
             }
             source.setBitmap(bitmapOptions);
@@ -78,7 +82,7 @@ public final class PopupGlass {
                     return true;
                 }
             });
-        });
+        }, 2f, 1, null, exclude);
     }
 
     @Nullable
