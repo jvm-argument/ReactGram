@@ -101,6 +101,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
 
     private ViewPager viewPager;
     private BottomPagesView bottomPages;
+    private com.reactgram.ui.LightningLogoView lightningLogo;
     private TextView switchLanguageTextView;
     private GradientDrawable startMessagingButtonBackground;
     private TextView startMessagingButton;
@@ -249,6 +250,8 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
 
         TextureView textureView = new TextureView(context);
         frameLayout2.addView(textureView, LayoutHelper.createFrame(ICON_WIDTH_DP, ICON_HEIGHT_DP, Gravity.CENTER));
+        lightningLogo = new com.reactgram.ui.LightningLogoView(context);
+        frameLayout2.addView(lightningLogo, LayoutHelper.createFrame(ICON_WIDTH_DP, ICON_HEIGHT_DP, Gravity.CENTER));
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
@@ -301,6 +304,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 bottomPages.setPageOffset(position, positionOffset);
+                lightningLogo.setPageOffset(position, positionOffset);
 
                 float width = viewPager.getMeasuredWidth();
                 if (width == 0) {

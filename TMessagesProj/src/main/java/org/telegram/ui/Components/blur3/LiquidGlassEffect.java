@@ -4,8 +4,10 @@ import android.graphics.RenderNode;
 
 import androidx.annotation.RequiresApi;
 
+import com.reactgram.ReactGramConfig;
 import com.reactgram.liquidglass.GlassParams;
 import com.reactgram.liquidglass.GlassShaderEffect;
+import com.reactgram.liquidglass.GlassTuning;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.ui.ActionBar.Theme;
@@ -59,14 +61,17 @@ public class LiquidGlassEffect {
         p.radiusRightTop = radiusRightTop;
         p.radiusLeftBottom = radiusLeftBottom;
         p.radiusLeftTop = radiusLeftTop;
-        p.thickness = thickness;
-        p.refractIntensity = intensity;
+        // User tuning (ReactGram settings) is applied on top of each surface's own base values.
+        ReactGramConfig.load();
+        p.thickness = Math.max(thickness * GlassTuning.thickness, 1f);
+        p.refractIntensity = intensity * GlassTuning.refraction;
         p.refractIndex = index;
-        p.tintColor = foregroundColor;
+        p.tintColor = GlassTuning.scaleAlpha(foregroundColor, GlassTuning.tint);
 
         // iOS-style edge light: a thin highlight, dimmer on dark themes (LiquidGlassAppearance.rimDarkAppearanceScale).
         p.rimWidth = Math.max(AndroidUtilities.dpf2(1.25f), 1f);
-        p.rimStrength = Theme.isCurrentThemeDark() ? 0.35f : 0.55f;
+        p.rimStrength = (Theme.isCurrentThemeDark() ? 0.35f : 0.55f) * GlassTuning.rim;
+        p.saturation = GlassTuning.saturation;
 
         effect.update(p);
     }

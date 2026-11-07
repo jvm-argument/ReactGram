@@ -1,0 +1,48 @@
+package com.reactgram.liquidglass;
+
+/**
+ * User-adjustable look of the glass. Scales are relative to the built-in defaults (1.0 = unchanged),
+ * so every surface keeps its own base values and only the user's preference is applied on top.
+ */
+public final class GlassTuning {
+    private GlassTuning() {}
+
+    public static final float DEFAULT_TINT = 1f;
+    public static final float DEFAULT_REFRACTION = 1f;
+    public static final float DEFAULT_THICKNESS = 1f;
+    public static final float DEFAULT_RIM = 1f;
+    public static final float DEFAULT_SATURATION = 0.25f;
+
+    /** Multiplier of the tint (colour overlay) opacity: 0 = fully clear glass. */
+    public static volatile float tint = DEFAULT_TINT;
+    /** Multiplier of how strongly the backdrop is bent at the edge. */
+    public static volatile float refraction = DEFAULT_REFRACTION;
+    /** Multiplier of the bevel width. */
+    public static volatile float thickness = DEFAULT_THICKNESS;
+    /** Multiplier of the edge highlight opacity. */
+    public static volatile float rim = DEFAULT_RIM;
+    /** Extra saturation of the backdrop, absolute. */
+    public static volatile float saturation = DEFAULT_SATURATION;
+
+    /** Bumped on every change so that already-recorded glass surfaces know they must redraw. */
+    public static volatile int version;
+
+    public static void touch() {
+        version++;
+    }
+
+    public static void reset() {
+        tint = DEFAULT_TINT;
+        refraction = DEFAULT_REFRACTION;
+        thickness = DEFAULT_THICKNESS;
+        rim = DEFAULT_RIM;
+        saturation = DEFAULT_SATURATION;
+        touch();
+    }
+
+    /** Scales the alpha channel of an ARGB colour. */
+    public static int scaleAlpha(int color, float scale) {
+        final int a = Math.min(255, Math.max(0, Math.round((color >>> 24) * scale)));
+        return (color & 0x00FFFFFF) | (a << 24);
+    }
+}

@@ -835,6 +835,7 @@ public class ActionBarPopupWindow extends PopupWindow {
         try {
             super.showAsDropDown(anchor, xoff, yoff);
             registerListener(anchor);
+            com.reactgram.ui.PopupGlass.attach(this);
         } catch (Exception e) {
             FileLog.e(e);
         }
@@ -1010,6 +1011,7 @@ public class ActionBarPopupWindow extends PopupWindow {
     public void showAtLocation(View parent, int gravity, int x, int y) {
         super.showAtLocation(parent, gravity, x, y);
         unregisterListener();
+        com.reactgram.ui.PopupGlass.attach(this);
     }
 
     @Override

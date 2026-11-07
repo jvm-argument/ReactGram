@@ -209,7 +209,7 @@
     <string name="CheckYourNewEmailSubtitle">Введите код, который пришёл на указанный Вами адрес %1$s.</string>
     <string name="LoginOrSingInWithGoogle">или</string>
     <!--Intro view-->
-    <string name="Page1Title">Telegram</string>
+    <string name="Page1Title">ReactGram</string>
     <string name="Page2Title">Быстрый</string>
     <string name="Page3Title">Бесплатный</string>
     <string name="Page4Title">Безопасный</string>
@@ -278,4 +278,19 @@
     <string name="GhostMarkReadAfterSend">Читать чат после отправки сообщения</string>
     <string name="GhostExtrasInfo">При отправке сообщения чат помечается прочитанным на сервере, чтобы ответы не висели непрочитанными.</string>
     <string name="GhostModeInfo">Скрыть прочтение, онлайн и набор текста</string>
+    <string name="ReactGramSettings">ReactGram</string>
+    <string name="ReactGramSettingsInfo">Режим призрака и жидкое стекло</string>
+    <string name="ReactGramGhostInfo">Скрыть прочтение, статус «в сети», набор текста и просмотр историй.</string>
+    <string name="ReactGramOn">Вкл.</string>
+    <string name="ReactGramOff">Выкл.</string>
+    <string name="GlassPreviewHeader">Предпросмотр</string>
+    <string name="GlassHeader">Жидкое стекло</string>
+    <string name="GlassTint">Прозрачность тонировки</string>
+    <string name="GlassRefraction">Сила преломления</string>
+    <string name="GlassThickness">Толщина края</string>
+    <string name="GlassRim">Подсветка края</string>
+    <string name="GlassSaturation">Насыщенность</string>
+    <string name="GlassReset">Сбросить настройки стекла</string>
+    <string name="GlassInfo">Изменения сразу видны в предпросмотре, а в панелях и меню применяются при следующей отрисовке. Нужен Android 13+ и выключенное энергосбережение.</string>
+    <string name="GlassIgnoreBatterySaver">Не отключать стекло при низком заряде</string>
 </resources>

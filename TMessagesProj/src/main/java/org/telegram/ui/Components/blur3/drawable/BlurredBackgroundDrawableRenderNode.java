@@ -32,6 +32,7 @@ public class BlurredBackgroundDrawableRenderNode extends BlurredBackgroundDrawab
     private final Paint paintStrokeBottom = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private boolean renderNodeInvalidated;
+    private int appliedTuningVersion = -1;
 
     public BlurredBackgroundDrawableRenderNode(BlurredBackgroundSource source) {
         this.renderNode = new RenderNode("BlurredNode");
@@ -175,6 +176,11 @@ public class BlurredBackgroundDrawableRenderNode extends BlurredBackgroundDrawab
         if (!canvas.isHardwareAccelerated()) {
             drawSource(canvas, source);
             return;
+        }
+
+        if (liquidGlassEffect != null && appliedTuningVersion != com.reactgram.liquidglass.GlassTuning.version) {
+            appliedTuningVersion = com.reactgram.liquidglass.GlassTuning.version;
+            renderNodeInvalidated = true;
         }
 
         if (!renderNode.hasDisplayList()) {
