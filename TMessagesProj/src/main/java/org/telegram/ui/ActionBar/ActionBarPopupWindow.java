@@ -790,7 +790,7 @@ public class ActionBarPopupWindow extends PopupWindow {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
         p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        p.dimAmount = amount;
+        p.dimAmount = 0f; // ReactGram: no dimming behind popup menus
         wm.updateViewLayout(container, p);
     }
 

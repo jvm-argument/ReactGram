@@ -1996,7 +1996,8 @@ public class ItemOptions {
                 clipTop = 0;
                 clipBottom = 0;
             }
-            dim = ColorUtils.setAlphaComponent(0x00000000, dimAlpha);
+            // ReactGram: no screen dimming behind menus, the glass should show the real content
+            dim = ColorUtils.setAlphaComponent(0x00000000, 0);
 
             if (drawScrim && scrimView instanceof UserCell && fragment instanceof ProfileActivity) {
                 cachedBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
