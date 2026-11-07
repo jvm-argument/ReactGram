@@ -138,6 +138,10 @@ android {
         minSdkVersion 23
         targetSdkVersion 36
 
+        // api_id / api_hash come from Gradle properties (e.g. ~/.gradle/gradle.properties); never commit real values.
+        buildConfigField "int", "TG_APP_ID", (project.findProperty("TG_APP_ID") ?: "4").toString()
+        buildConfigField "String", "TG_APP_HASH", "\"" + (project.findProperty("TG_APP_HASH") ?: "014b35b6184100b085b0d0572f9b5103") + "\""
+
         vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
         multiDexEnabled true

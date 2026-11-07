@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="GhostMode">Ghost Mode</string>
+    <string name="GhostModeToggle">Ghost Mode</string>
+    <string name="GhostEssentialsHeader">Hide activity</string>
+    <string name="GhostHideRead">Don\'t send read receipts</string>
+    <string name="GhostHideOnline">Don\'t send online status</string>
+    <string name="GhostHideTyping">Don\'t send typing and upload status</string>
+    <string name="GhostHideStories">Don\'t mark stories as viewed</string>
+    <string name="GhostHideInfo">Messages are still marked as read on this device, but senders will not see that you read them.</string>
+    <string name="GhostExtrasHeader">Extras</string>
+    <string name="GhostOfflineAfterOnline">Go offline right after coming online</string>
+    <string name="GhostMarkReadAfterSend">Mark chat as read after sending a message</string>
+    <string name="GhostExtrasInfo">When you send a message, the chat is marked as read on the server so replies are not left looking unread.</string>
+</resources>
