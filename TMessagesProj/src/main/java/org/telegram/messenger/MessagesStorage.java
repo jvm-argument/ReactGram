@@ -16283,6 +16283,10 @@ public class MessagesStorage extends BaseController {
                                     if (reactionUpdates != null) {
                                         reactionUpdates.add(new SavedReactionsUpdate(selfId, oldMessage, message));
                                     }
+                                    // ReactGram: remember the text a message had before it was edited
+                                    if (com.reactgram.features.FeatureConfig.saveEdits() && message.from_id != null && oldMessage.message != null && !oldMessage.message.equals(message.message)) {
+                                        com.reactgram.features.SavedStore.get().recordEdit(currentAccount, MessageObject.getDialogId(message), oldMessage);
+                                    }
                                     int send_state = cursor.intValue(5);
                                     if (send_state != 3) {
                                         if (MessageObject.getFileName(oldMessage).equals(MessageObject.getFileName(message))) {

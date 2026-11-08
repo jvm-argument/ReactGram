@@ -3725,6 +3725,10 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             }
         }
 
+        // ReactGram: a message hidden by a filter is shown blurred in the chat list
+        if (message != null && !message.isOutOwner() && com.reactgram.features.MessageFilter.isFiltered(message)) {
+            com.reactgram.features.MessageFilter.blurify(message);
+        }
         if (!animated) {
             dialogMutedProgress = (dialogMuted || drawUnmute) ? 1f : 0f;
             if (countAnimator != null) {

@@ -473,6 +473,12 @@ public class ChatActivity extends BaseFragment implements
     private ChatListItemAnimator chatListItemAnimator;
     private GridLayoutManagerFixed chatLayoutManager;
     private ChatActivityAdapter chatAdapter;
+    // ReactGram: redraw rows when messages get flagged as deleted
+    private final Runnable reactGramRefresh = () -> {
+        if (chatAdapter != null && chatListView != null) {
+            chatAdapter.notifyDataSetChanged(false);
+        }
+    };
     private UnreadCounterTextView bottomOverlayChatText;
     private boolean bottomOverlayLinks;
     private LinkSpanDrawable.LinksTextView bottomOverlayLinksText;
@@ -1264,6 +1270,7 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_VIEW_STATISTICS = 115;
     public final static int OPTION_WELCOME_REVERT = 116;
     public final static int OPTION_SEND_MONEY = 117;
+    public final static int OPTION_EDIT_HISTORY = 118;
 
     private final static int[] allowedNotificationsDuringChatListAnimations = new int[]{
             NotificationCenter.messagesRead,
@@ -2716,6 +2723,7 @@ public class ChatActivity extends BaseFragment implements
 
     @Override
     public boolean onFragmentCreate() {
+        com.reactgram.features.SavedStore.get().addListener(reactGramRefresh);
         final long chatId = arguments.getLong("chat_id", 0);
         final long userId = arguments.getLong("user_id", 0);
         final int encId = arguments.getInt("enc_id", 0);
@@ -3404,6 +3412,7 @@ public class ChatActivity extends BaseFragment implements
     @Override
     public void onFragmentDestroy() {
         super.onFragmentDestroy();
+        com.reactgram.features.SavedStore.get().removeListener(reactGramRefresh);
         if (messageMetricsView != null) {
             messageMetricsView.finish();
         }
@@ -22260,7 +22269,7 @@ public class ChatActivity extends BaseFragment implements
                 boolean scheduled = (Boolean) args[2];
                 int mode = (Integer) args[3];
                 if (mode != chatMode && chatMode != MODE_SAVED && chatMode != MODE_SUGGESTIONS) {
-                    if (chatMode != MODE_SCHEDULED && mode == MODE_SCHEDULED && !isPaused && LaunchActivity.getSafeLastFragment() == this && messagePreviewParams == null) {
+                    if (chatMode != MODE_SCHEDULED && mode == MODE_SCHEDULED && !isPaused && LaunchActivity.getSafeLastFragment() == this && messagePreviewParams == null && !com.reactgram.features.AutoSchedule.justApplied()) {
                         if (!arr.isEmpty() && arr.get(0).getId() < 0) {
                             openScheduledMessages(arr.get(0).getId(), arr.get(0).messageOwner != null && arr.get(0).messageOwner.video_processing_pending);
                         }
@@ -33606,6 +33615,10 @@ public class ChatActivity extends BaseFragment implements
         }
         boolean preserveDim = false;
         switch (option) {
+            case OPTION_EDIT_HISTORY: {
+                showDialog(com.reactgram.features.EditHistoryDialog.build(getParentActivity(), currentAccount, selectedObject));
+                break;
+            }
             case OPTION_RETRY: {
                 final MessageObject object = selectedObject;
                 final MessageObject.GroupedMessages group = selectedObjectGroup;
@@ -37738,6 +37751,8 @@ public class ChatActivity extends BaseFragment implements
                 ChatMessageUnsupportedCell cell = new ChatMessageUnsupportedCell(mContext, themeDelegate);
                 cell.setDelegate(getChatMessageCellDelegate());
                 view = cell;
+            } else if (viewType == -1000) {
+                view = new com.reactgram.features.HiddenRowView(mContext);
             }
             view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
             return new RecyclerListView.Holder(view);
@@ -38369,7 +38384,11 @@ public class ChatActivity extends BaseFragment implements
                 } else {
                     messages = ChatActivity.this.messages;
                 }
-                return messages.get(position - messagesStartRow).contentType;
+                final MessageObject rowMessage = messages.get(position - messagesStartRow);
+                if (com.reactgram.features.MessageFilter.hidesInChat(rowMessage, ChatObject.isChannel(currentChat))) {
+                    return -1000;
+                }
+                return rowMessage.contentType;
             } else if (position == botInfoRow) {
                 return 3;
             } else if (position == userInfoRow) {
@@ -46571,6 +46590,11 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.Forward));
                     options.add(OPTION_FORWARD);
                     icons.add(R.drawable.msg_forward);
+                }
+                if (message != null && com.reactgram.features.SavedStore.get().hasEdits(currentAccount, message.getDialogId(), message.getId())) {
+                    items.add(LocaleController.getString(R.string.EditHistoryMenu));
+                    options.add(OPTION_EDIT_HISTORY);
+                    icons.add(R.drawable.msg_log);
                 }
                 if (allowUnpin) {
                     items.add(LocaleController.getString(R.string.UnpinMessage));

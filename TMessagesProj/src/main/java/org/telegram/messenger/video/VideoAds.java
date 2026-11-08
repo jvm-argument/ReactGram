@@ -194,6 +194,7 @@ public static VideoAds make(
     private boolean loading, loaded;
     private void load() {
         if (loading || loaded) return;
+        if (com.reactgram.features.FeatureConfig.disableAds()) return;
 
         if (UserConfig.getInstance(currentAccount).isPremium() && MessagesController.getInstance(currentAccount).isSponsoredDisabled()) {
             return;

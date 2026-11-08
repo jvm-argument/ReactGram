@@ -18520,6 +18520,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (currentMessageObject.messageOwner.video_processing_pending) {
             timeString = formatString(R.string.ScheduledTimeApprox, timeString);
         }
+        if (com.reactgram.features.SavedStore.get().isDeleted(currentAccount, currentMessageObject.getDialogId(), currentMessageObject.getId())) {
+            timeString = getString(R.string.ReactGramDeletedMark) + " " + timeString;
+        }
         if (signString != null) {
             if (messageObject.messageOwner.via_business_bot_id != 0) {
                 currentTimeString = timeString + ", ";
