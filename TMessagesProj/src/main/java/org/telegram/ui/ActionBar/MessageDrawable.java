@@ -559,7 +559,7 @@ public class MessageDrawable extends Drawable {
 
     public void draw(Canvas canvas, Paint paintToUse) {
         Rect bounds = getBounds();
-        if (paintToUse == null && paint.getStyle() == Paint.Style.FILL && gradientShader == null && overrideRoundRadius == 0 && overrideRounding <= 0) {
+        if (paintToUse == null && paint.getStyle() == Paint.Style.FILL && gradientShader == null && overrideRoundRadius == 0 && overrideRounding <= 0 && !com.reactgram.ui.BubbleGlass.active()) {
             Drawable background = getBackgroundDrawable();
             if (background != null) {
                 background.setBounds(bounds);
@@ -630,7 +630,7 @@ public class MessageDrawable extends Drawable {
             p.setAlpha(Math.round(pa * com.reactgram.ui.BubbleGlass.opacity()));
             canvas.drawPath(path, p);
             p.setAlpha(pa);
-            com.reactgram.ui.BubbleGlass.drawRim(canvas, path, alpha);
+            com.reactgram.ui.BubbleGlass.drawGlass(canvas, path, bounds, alpha);
         } else {
             canvas.drawPath(path, p);
         }
