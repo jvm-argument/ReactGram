@@ -20772,16 +20772,16 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 //                } else {
                 currentSelectedBackgroundAlpha = 0;
                 currentBackgroundDrawable.setAlpha((int) (255 * alphaInternal));
-                drawBubbleFill(canvas);
+                currentBackgroundDrawable.drawCached(canvas, backgroundCacheParams);
 //                }
-                if (currentBackgroundShadowDrawable != null && currentPosition == null && !com.reactgram.ui.BubbleGlass.active()) {
+                if (currentBackgroundShadowDrawable != null && currentPosition == null) {
                     currentBackgroundShadowDrawable.setAlpha((int) (255 * alphaInternal));
                     currentBackgroundShadowDrawable.draw(canvas);
                 }
             } else {
                 if (isHighlightedAnimated) {
                     currentBackgroundDrawable.setAlpha((int) (255 * alphaInternal));
-                    drawBubbleFill(canvas);
+                    currentBackgroundDrawable.drawCached(canvas, backgroundCacheParams);
                     currentSelectedBackgroundAlpha = getHighlightAlpha();
                     if (currentPosition == null) {
                         currentBackgroundSelectedDrawable.setAlpha((int) (alphaInternal * currentSelectedBackgroundAlpha * 255));
@@ -20789,7 +20789,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     }
                 } else if (selectedBackgroundProgress != 0 && (currentMessageObject == null || !currentMessageObject.preview) && !(currentMessagesGroup != null && currentMessagesGroup.isDocuments)) {
                     currentBackgroundDrawable.setAlpha((int) (255 * alphaInternal));
-                    drawBubbleFill(canvas);
+                    currentBackgroundDrawable.drawCached(canvas, backgroundCacheParams);
                     currentSelectedBackgroundAlpha = selectedBackgroundProgress;
                     currentBackgroundSelectedDrawable.setAlpha((int) (currentSelectedBackgroundAlpha * alphaInternal * 255));
                     currentBackgroundSelectedDrawable.drawCached(canvas, backgroundCacheParams);
@@ -20811,10 +20811,10 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     } else {
                         currentSelectedBackgroundAlpha = 0;
                         currentBackgroundDrawable.setAlpha((int) (255 * alphaInternal));
-                        drawBubbleFill(canvas);
+                        currentBackgroundDrawable.drawCached(canvas, backgroundCacheParams);
                     }
                 }
-                if (currentBackgroundShadowDrawable != null && currentPosition == null && !com.reactgram.ui.BubbleGlass.active()) {
+                if (currentBackgroundShadowDrawable != null && currentPosition == null) {
                     currentBackgroundShadowDrawable.setAlpha((int) (255 * alphaInternal));
                     currentBackgroundShadowDrawable.draw(canvas);
                 }
@@ -21981,7 +21981,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             currentBackgroundDrawable.setTop(keyboardHeight, w, h, (int) parentViewTopOffset, blurredViewTopOffset, blurredViewBottomOffset, pinnedTop, pinnedBottom);
             currentBackgroundDrawable.setBotButtonsBottom(hasInlineBotButtons());
             Drawable currentBackgroundShadowDrawable = currentBackgroundDrawable.getShadowDrawable();
-            if (currentBackgroundShadowDrawable != null && !com.reactgram.ui.BubbleGlass.active()) {
+            if (currentBackgroundShadowDrawable != null) {
                 currentBackgroundShadowDrawable.setAlpha((int) (getAlpha() * 255));
                 currentBackgroundShadowDrawable.setBounds(left, top, right, bottom);
                 currentBackgroundShadowDrawable.draw(canvas);
@@ -21989,7 +21989,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             }
             currentBackgroundDrawable.setAlpha((int) (getAlpha() * 255));
             currentBackgroundDrawable.setBounds(left, top, right, bottom);
-            drawBubbleFill(canvas);
+            currentBackgroundDrawable.drawCached(canvas, backgroundCacheParams);
             currentBackgroundDrawable.setAlpha(255);
         }
 
@@ -29174,16 +29174,6 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 return (drawClock ? 4 : 0) | (drawError ? 8 : 0);
             }
         }
-    }
-
-    // ReactGram: real liquid glass for the bubble when enabled, the original fill otherwise
-    private void drawBubbleFill(Canvas canvas) {
-        if (currentMessageObject != null && com.reactgram.ui.BubbleGlass.draw(this, canvas, currentBackgroundDrawable, backgroundCacheParams,
-                getThemedColor(currentMessageObject.isOutOwner() ? Theme.key_chat_outBubble : Theme.key_chat_inBubble),
-                currentBackgroundDrawable.getPaint().getAlpha())) {
-            return;
-        }
-        currentBackgroundDrawable.drawCached(canvas, backgroundCacheParams);
     }
 
     public int getThemedColor(int key) {

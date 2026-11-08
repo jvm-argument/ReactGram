@@ -12,8 +12,6 @@ public final class GlassTuning {
     public static final float DEFAULT_REFRACTION = 1f;
     public static final float DEFAULT_THICKNESS = 1f;
     public static final float DEFAULT_RIM = 1f;
-    /** Opacity of message bubbles, 1 = Telegram's own (opaque). */
-    public static final float DEFAULT_BUBBLE = 0.6f;
     public static final float DEFAULT_SATURATION = 0.25f;
 
     /** Multiplier of the tint (colour overlay) opacity: 0 = fully clear glass. */
@@ -24,8 +22,6 @@ public final class GlassTuning {
     public static volatile float thickness = DEFAULT_THICKNESS;
     /** Multiplier of the edge highlight opacity. */
     public static volatile float rim = DEFAULT_RIM;
-    /** Opacity multiplier of chat message bubbles so the chat background shows through. */
-    public static volatile float bubbleOpacity = DEFAULT_BUBBLE;
     /** Extra saturation of the backdrop, absolute. */
     public static volatile float saturation = DEFAULT_SATURATION;
 
@@ -42,7 +38,6 @@ public final class GlassTuning {
         thickness = DEFAULT_THICKNESS;
         rim = DEFAULT_RIM;
         saturation = DEFAULT_SATURATION;
-        bubbleOpacity = DEFAULT_BUBBLE;
         touch();
     }
 

@@ -559,19 +559,11 @@ public class MessageDrawable extends Drawable {
 
     public void draw(Canvas canvas, Paint paintToUse) {
         Rect bounds = getBounds();
-        if (paintToUse == null && paint.getStyle() == Paint.Style.FILL && gradientShader == null && overrideRoundRadius == 0 && overrideRounding <= 0 && !com.reactgram.ui.BubbleGlass.active()) {
+        if (paintToUse == null && paint.getStyle() == Paint.Style.FILL && gradientShader == null && overrideRoundRadius == 0 && overrideRounding <= 0) {
             Drawable background = getBackgroundDrawable();
             if (background != null) {
                 background.setBounds(bounds);
-                final float glassK = com.reactgram.ui.BubbleGlass.opacity();
-                if (glassK < 1f) {
-                    final int a = background.getAlpha();
-                    background.setAlpha(Math.round(a * glassK));
-                    background.draw(canvas);
-                    background.setAlpha(a);
-                } else {
-                    background.draw(canvas);
-                }
+                background.draw(canvas);
                 return;
             }
         }
@@ -625,15 +617,7 @@ public class MessageDrawable extends Drawable {
             generatePath(path, bounds, padding, rad, smallRad, nearRad, top, drawFullBottom, drawFullTop, paintToUse != null);
         }
 
-        if (paintToUse == null && com.reactgram.ui.BubbleGlass.opacity() < 1f) {
-            final int pa = p.getAlpha();
-            p.setAlpha(Math.round(pa * com.reactgram.ui.BubbleGlass.opacity()));
-            canvas.drawPath(path, p);
-            p.setAlpha(pa);
-            com.reactgram.ui.BubbleGlass.drawGlass(canvas, path, bounds, alpha);
-        } else {
-            canvas.drawPath(path, p);
-        }
+        canvas.drawPath(path, p);
         if (gradientShader != null && isSelected && paintToUse == null) {
             int color = getColor(Theme.key_chat_outBubbleGradientSelectedOverlay);
             selectedPaint.setColor(ColorUtils.setAlphaComponent(color, (int) (Color.alpha(color) * alpha / 255f)));
