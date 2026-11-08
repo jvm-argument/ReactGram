@@ -74,6 +74,9 @@ public class ChatInputViewsContainer extends FrameLayout {
 
 
     public boolean drawInputBackground = true;
+
+    /** Extra px cut from the right edge of the input pill so that the send button stands apart from it. */
+    public java.util.function.IntSupplier separatedSendWidth;
     public BlurredBackgroundDrawable blurredBackgroundDrawable;
     private BlurredBackgroundDrawable underKeyboardBackgroundDrawable;
     public void setInputIslandBubbleDrawable(BlurredBackgroundDrawable drawable) {
@@ -265,6 +268,9 @@ public class ChatInputViewsContainer extends FrameLayout {
             getMeasuredWidth() - Math.round(inputBubbleOffsetRight),
             inputBubbleHeightRound
         );
+        if (separatedSendWidth != null) {
+            tmpRect.right -= separatedSendWidth.getAsInt();
+        }
         tmpRect.inset(0, -dp(7));
         tmpRect.offset(0, blurTop + (int) bubbleInputTranlationY);
 

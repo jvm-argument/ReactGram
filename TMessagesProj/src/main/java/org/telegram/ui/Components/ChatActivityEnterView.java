@@ -2699,7 +2699,8 @@ public class ChatActivityEnterView extends FrameLayout implements
             }
         };
         frameLayout.setClipChildren(false);
-        textFieldContainer.addView(frameLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 0, 0, DEFAULT_HEIGHT, 0));
+        // ReactGram: the voice/video/send button is a separate round button; keep a gap between it and the field pill
+        textFieldContainer.addView(frameLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 0, 0, DEFAULT_HEIGHT + SEPARATED_SEND_GAP, 0));
 
         emojiButton = new ChatActivityEnterViewAnimatedIconView(context) {
             @Override
@@ -4711,6 +4712,14 @@ public class ChatActivityEnterView extends FrameLayout implements
 
     public boolean allowBlur = true;
     public boolean shouldDrawBackground = true;
+
+    /** Gap, in dp, between the field pill and the separate send/voice/video button. */
+    public static final int SEPARATED_SEND_GAP = 8;
+
+    /** Width in px that the field pill gives up at its right edge for the separate button and the gap. */
+    public int getSeparatedSendWidth() {
+        return dp(DEFAULT_HEIGHT + SEPARATED_SEND_GAP);
+    }
     public boolean shouldDrawRecordedAudioPanelInParent;
     public boolean isStories;
 

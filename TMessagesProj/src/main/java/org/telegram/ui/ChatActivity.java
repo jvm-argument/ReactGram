@@ -4650,6 +4650,8 @@ public class ChatActivity extends BaseFragment implements
 
         chatInputViewsContainer = new ChatInputViewsContainer(context);
         chatInputViewsContainer.setClipChildren(false);
+        chatInputViewsContainer.separatedSendWidth = () ->
+            chatActivityEnterView != null && chatActivityEnterView.getVisibility() == View.VISIBLE ? chatActivityEnterView.getSeparatedSendWidth() : 0;
         chatInputViewsContainer.setWindowInsetsProvider(windowInsetsStateHolder);
         chatInputViewsContainer.setInputIslandBubbleDrawable(
             glassBackgroundDrawableFactory.create(chatInputViewsContainer, blurredBackgroundColorProvider));
