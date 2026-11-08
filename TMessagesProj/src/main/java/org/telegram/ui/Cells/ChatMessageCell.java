@@ -1833,6 +1833,19 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
     private final boolean ALPHA_PROPERTY_WORKAROUND = Build.VERSION.SDK_INT == 28;
     private float alphaInternal = 1f;
+    // ReactGram: a message deleted by its author is drawn semi-transparent
+    private boolean reactGramDeleted;
+
+    @Override
+    public void draw(Canvas canvas) {
+        if (reactGramDeleted && getWidth() > 0 && getHeight() > 0) {
+            final int save = canvas.saveLayerAlpha(0, 0, getWidth(), getHeight(), 110);
+            super.draw(canvas);
+            canvas.restoreToCount(save);
+        } else {
+            super.draw(canvas);
+        }
+    }
 
     public final TransitionParams transitionParams = new TransitionParams();
     private boolean edited;
@@ -18520,7 +18533,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (currentMessageObject.messageOwner.video_processing_pending) {
             timeString = formatString(R.string.ScheduledTimeApprox, timeString);
         }
-        if (com.reactgram.features.SavedStore.get().isDeleted(currentAccount, currentMessageObject.getDialogId(), currentMessageObject.getId())) {
+        reactGramDeleted = com.reactgram.features.SavedStore.get().isDeleted(currentAccount, currentMessageObject.getDialogId(), currentMessageObject.getId());
+        if (reactGramDeleted) {
             timeString = getString(R.string.ReactGramDeletedMark) + " " + timeString;
         }
         if (signString != null) {
