@@ -1586,6 +1586,7 @@ public class BottomSheet extends Dialog implements BaseFragment.AttachedSheet {
             getWindow().setSoftInputMode(focusableSoftInputMode);
         }
         dismissed = false;
+        com.reactgram.ui.SheetGlass.attach(this, containerView, shadowDrawable);
         cancelSheetAnimation();
         containerView.measure(
             View.MeasureSpec.makeMeasureSpec(AndroidUtilities.displaySize.x + backgroundPaddingLeft * 2, View.MeasureSpec.AT_MOST),
