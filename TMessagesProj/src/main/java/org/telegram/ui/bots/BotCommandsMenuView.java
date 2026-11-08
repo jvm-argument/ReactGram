@@ -97,9 +97,19 @@ public class BotCommandsMenuView extends View {
         invalidate();
     }
 
+    private org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable glass;
+    private final android.graphics.Rect glassRect = new android.graphics.Rect();
+
+    /** ReactGram: draw the pill as liquid glass instead of the opaque accent fill. */
+    public void setGlassBackground(org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable glass) {
+        this.glass = glass;
+        updateColors();
+        invalidate();
+    }
+
     private void updateColors() {
         paint.setColor(Theme.getColor(Theme.key_chat_messagePanelVoiceBackground));
-        int textColor = Theme.getColor(Theme.key_chat_messagePanelVoiceDuration);
+        int textColor = glass != null ? Theme.getColor(Theme.key_glass_defaultIcon) : Theme.getColor(Theme.key_chat_messagePanelVoiceDuration);
         backDrawable.setBackColor(textColor);
         backDrawable.setIconColor(textColor);
         if (webViewAnimation != null) {
@@ -160,7 +170,14 @@ public class BotCommandsMenuView extends View {
 
             if (drawBackgroundDrawable) {
                 rectTmp.set(0, 0, AndroidUtilities.dp(40) + (menuTextWidth + AndroidUtilities.dp(4)) * expandProgress, getMeasuredHeight());
-                canvas.drawRoundRect(rectTmp, AndroidUtilities.dp(16), AndroidUtilities.dp(16), paint);
+                if (glass != null) {
+                    rectTmp.round(glassRect);
+                    glassRect.inset(-AndroidUtilities.dp(7), -AndroidUtilities.dp(7));
+                    glass.setBounds(glassRect);
+                    glass.draw(canvas);
+                } else {
+                    canvas.drawRoundRect(rectTmp, AndroidUtilities.dp(16), AndroidUtilities.dp(16), paint);
+                }
                 backgroundDrawable.setBounds((int) rectTmp.left, (int) rectTmp.top, (int) rectTmp.right, (int) rectTmp.bottom);
                 backgroundDrawable.draw(canvas);
             }

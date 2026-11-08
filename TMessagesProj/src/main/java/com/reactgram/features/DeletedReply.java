@@ -54,6 +54,17 @@ public final class DeletedReply {
         final String prefix = author + "\n" + quoted + "\n";
         final ArrayList<TLRPC.MessageEntity> entities = new ArrayList<>();
 
+        // one quote holds both the bold, linked nick and the quoted message
+        final TLRPC.TL_messageEntityBlockquote quote = new TLRPC.TL_messageEntityBlockquote();
+        quote.offset = 0;
+        quote.length = author.length() + 1 + quoted.length();
+        entities.add(quote);
+
+        final TLRPC.TL_messageEntityBold bold = new TLRPC.TL_messageEntityBold();
+        bold.offset = 0;
+        bold.length = author.length();
+        entities.add(bold);
+
         if (url != null) {
             final TLRPC.TL_messageEntityTextUrl link = new TLRPC.TL_messageEntityTextUrl();
             link.offset = 0;
@@ -61,10 +72,6 @@ public final class DeletedReply {
             link.url = url;
             entities.add(link);
         }
-        final TLRPC.TL_messageEntityBlockquote quote = new TLRPC.TL_messageEntityBlockquote();
-        quote.offset = author.length() + 1;
-        quote.length = quoted.length();
-        entities.add(quote);
 
         if (params.entities != null) {
             for (TLRPC.MessageEntity entity : params.entities) {

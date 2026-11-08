@@ -1986,6 +1986,28 @@ public class ChatActivityEnterView extends FrameLayout implements
 
     public class RecordCircle extends View {
 
+        // ReactGram: the recording circle is liquid glass instead of an opaque accent disc
+        private BlurredBackgroundDrawable glass;
+        private final Rect glassRect = new Rect();
+
+        public void setGlass(BlurredBackgroundDrawable glass) {
+            this.glass = glass;
+            updateColors();
+            invalidate();
+        }
+
+        private void drawGlassCircle(Canvas canvas, float cx, float cy, float r) {
+            if (glass == null) {
+                canvas.drawCircle(cx, cy, r, paint);
+                return;
+            }
+            glassRect.set(Math.round(cx - r), Math.round(cy - r), Math.round(cx + r), Math.round(cy + r));
+            glassRect.inset(-dp(7), -dp(7));
+            glass.setRadius(r);
+            glass.setBounds(glassRect);
+            glass.draw(canvas);
+        }
+
         private float amplitude;
         private float animateToAmplitude;
         private float animateAmplitudeDiff;
@@ -2388,10 +2410,10 @@ public class ChatActivityEnterView extends FrameLayout implements
                             rectF.set(left, top, right, bottom);
                             audioTimelineView.drawIn(canvas, rectF, progressToSeekbarStep3);
                         } else {
-                            canvas.drawCircle(cx + slideDelta, cy, radius * (1f - progressToSeekbarStep3), paint);
+                            drawGlassCircle(canvas, cx + slideDelta, cy, radius * (1f - progressToSeekbarStep3));
                         }
                     } else {
-                        canvas.drawCircle(cx + slideDelta, cy, radius, paint);
+                        drawGlassCircle(canvas, cx + slideDelta, cy, radius);
                     }
                     canvas.save();
                     float a = (1f - exitProgress2);
@@ -2402,7 +2424,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             }
 
             if (scale != 1f) {
-                canvas.drawCircle(cx + slideDelta, cy, radius, paint);
+                drawGlassCircle(canvas, cx + slideDelta, cy, radius);
                 float a = (canceledByGesture ? (1f - slideToCancelProgress) : 1);
                 canvas.save();
                 canvas.translate(slideDelta, 0);
@@ -2488,8 +2510,9 @@ public class ChatActivityEnterView extends FrameLayout implements
 
         public void updateColors() {
             paint.setColor(getThemedColor(Theme.key_chat_messagePanelVoiceBackground));
-            tinyWaveDrawable.paint.setColor(ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_messagePanelVoiceBackground), (int) (255 * WaveDrawable.CIRCLE_ALPHA_2)));
-            bigWaveDrawable.paint.setColor(ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_messagePanelVoiceBackground), (int) (255 * WaveDrawable.CIRCLE_ALPHA_1)));
+            final int waveBase = glass != null ? 0xFFFFFFFF : getThemedColor(Theme.key_chat_messagePanelVoiceBackground);
+            tinyWaveDrawable.paint.setColor(ColorUtils.setAlphaComponent(waveBase, (int) (255 * WaveDrawable.CIRCLE_ALPHA_2)));
+            bigWaveDrawable.paint.setColor(ColorUtils.setAlphaComponent(waveBase, (int) (255 * WaveDrawable.CIRCLE_ALPHA_1)));
 
             paintAlpha = paint.getAlpha();
         }
@@ -3221,6 +3244,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
             private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             private final RectF backgroundRect = new RectF();
+            private final Rect glassRectTmp = new Rect();
 
             @Override
             protected void dispatchDraw(@NonNull Canvas canvas) {
@@ -3246,7 +3270,15 @@ public class ChatActivityEnterView extends FrameLayout implements
 
                     canvas.save();
                     canvas.scale(s, s, backgroundRect.centerX(), backgroundRect.centerY());
-                    canvas.drawRoundRect(backgroundRect, r, r, paint);
+                    if (audioVideoGlass != null) {
+                        // ReactGram: separate glass button instead of the opaque accent circle
+                        backgroundRect.round(glassRectTmp);
+                        glassRectTmp.inset(-dp(7), -dp(7));
+                        audioVideoGlass.setBounds(glassRectTmp);
+                        audioVideoGlass.draw(canvas);
+                    } else {
+                        canvas.drawRoundRect(backgroundRect, r, r, paint);
+                    }
                     canvas.restore();
                 }
                 super.dispatchDraw(canvas);
@@ -4490,6 +4522,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             }
         });
         messageEditTextContainer.addView(botCommandsMenuButton, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 32, Gravity.BOTTOM | Gravity.LEFT, 8, 6, 8, 6));
+        applyMenuGlass();
         AndroidUtilities.updateViewVisibilityAnimated(botCommandsMenuButton, false, 1f, false);
         botCommandsMenuButton.setExpanded(true, false);
     }
@@ -4511,6 +4544,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             return;
         }
         recordCircle = new RecordCircle(getContext());
+        applyRecordGlass();
         recordCircle.setVisibility(GONE);
         sizeNotifierLayout.addView(recordCircle, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM));
     }
@@ -4712,6 +4746,50 @@ public class ChatActivityEnterView extends FrameLayout implements
 
     public boolean allowBlur = true;
     public boolean shouldDrawBackground = true;
+
+    private BlurredBackgroundDrawable audioVideoGlass;
+
+    /**
+     * ReactGram: the send, voice and video buttons are separate round liquid glass buttons (like the back button)
+     * instead of opaque accent circles.
+     */
+    public void setSendGlass(BlurredBackgroundDrawableViewFactory factory, org.telegram.ui.Components.blur3.drawable.color.BlurredBackgroundColorProvider provider) {
+        audioVideoGlass = factory.create(audioVideoButtonContainer, provider);
+        audioVideoGlass.setRadius(dp(22));
+        audioVideoGlass.setPadding(dp(4));
+        sendButton.setBlurredBackgroundDrawable(factory.create(sendButton, provider));
+        sendButton.updateColors();
+        audioVideoSendButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_glass_defaultIcon), PorterDuff.Mode.SRC_IN));
+        sendGlassFactory = factory;
+        sendGlassProvider = provider;
+        applyMenuGlass();
+        applyRecordGlass();
+        audioVideoButtonContainer.invalidate();
+        sendButton.invalidate();
+    }
+
+    private BlurredBackgroundDrawableViewFactory sendGlassFactory;
+
+    private void applyRecordGlass() {
+        if (sendGlassFactory == null || recordCircle == null) {
+            return;
+        }
+        final BlurredBackgroundDrawable circleGlass = sendGlassFactory.create(recordCircle, sendGlassProvider);
+        circleGlass.setPadding(dp(4));
+        recordCircle.setGlass(circleGlass);
+    }
+    private org.telegram.ui.Components.blur3.drawable.color.BlurredBackgroundColorProvider sendGlassProvider;
+
+    // mini apps / bot menu button: glass pill as well; the button is created lazily, so this runs from both places
+    private void applyMenuGlass() {
+        if (sendGlassFactory == null || botCommandsMenuButton == null) {
+            return;
+        }
+        final BlurredBackgroundDrawable menuGlass = sendGlassFactory.create(botCommandsMenuButton, sendGlassProvider);
+        menuGlass.setRadius(dp(16));
+        menuGlass.setPadding(dp(4));
+        botCommandsMenuButton.setGlassBackground(menuGlass);
+    }
 
     /** Gap, in dp, between the field pill and the separate send/voice/video button. */
     public static final int SEPARATED_SEND_GAP = 8;
@@ -14922,6 +15000,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         public boolean center;
 
         private final Paint backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Rect glassRectTmp = new Rect();
 
         public SendButton(Context context, int resId, Theme.ResourcesProvider resourcesProvider) {
             this(context, resId, resourcesProvider, false);
@@ -15186,7 +15265,15 @@ public class ChatActivityEnterView extends FrameLayout implements
             updateColors();
             checkBackgroundRect();
             if (isNewDesignSendButton) {
-                canvas.drawRoundRect(backgroundRect, dp(RADIUS), dp(RADIUS), backgroundPaint);
+                if (blurredBackgroundDrawable != null) {
+                    // ReactGram: liquid glass button instead of the accent circle
+                    backgroundRect.round(glassRectTmp);
+                    glassRectTmp.inset(-dp(7), -dp(7));
+                    blurredBackgroundDrawable.setBounds(glassRectTmp);
+                    blurredBackgroundDrawable.draw(canvas);
+                } else {
+                    canvas.drawRoundRect(backgroundRect, dp(RADIUS), dp(RADIUS), backgroundPaint);
+                }
             }
 
             final boolean inactive = isInactive();
@@ -15270,7 +15357,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
                 canvas.scale(eS, eS, bCX, bCY);
 
-                if (blurredBackgroundDrawable != null) {
+                if (blurredBackgroundDrawable != null && !isNewDesignSendButton) {
                     AndroidUtilities.rectTmp.round(AndroidUtilities.rectTmp2);
                     AndroidUtilities.rectTmp2.inset(-dp(7), -dp(7));
                     blurredBackgroundDrawable.setBounds(AndroidUtilities.rectTmp2);
@@ -15447,7 +15534,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         private int drawableColor;
 
         public void updateColors() {
-            int color = isNewDesignSendButton ? Color.WHITE : Theme.getColor(Theme.key_chat_messagePanelSend, resourcesProvider);
+            int color = isNewDesignSendButton ? (blurredBackgroundDrawable != null ? Theme.getColor(Theme.key_glass_defaultIcon, resourcesProvider) : Color.WHITE) : Theme.getColor(Theme.key_chat_messagePanelSend, resourcesProvider);
             if (color != drawableColor) {
                 drawableColor = color;
                 drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));

@@ -9315,6 +9315,8 @@ public class MessagesController extends BaseController implements NotificationCe
         if ((messages == null || messages.isEmpty()) && taskId == 0) {
             return;
         }
+        // ReactGram: deletions the user asked for must go through, only deletions by others are kept
+        com.reactgram.features.DeletedKeeper.markOwn(currentAccount, messages);
         ArrayList<Integer> toSend = null;
         long channelId;
         if (taskId == 0) {
