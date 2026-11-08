@@ -103,6 +103,9 @@ public class BotCommandsMenuView extends View {
     /** ReactGram: draw the pill as liquid glass instead of the opaque accent fill. */
     public void setGlassBackground(org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable glass) {
         this.glass = glass;
+        // no press highlight at all: only the glass is shown while pressed
+        backgroundDrawable = Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(16), Color.TRANSPARENT, Color.TRANSPARENT);
+        backgroundDrawable.setCallback(this);
         updateColors();
         invalidate();
     }
