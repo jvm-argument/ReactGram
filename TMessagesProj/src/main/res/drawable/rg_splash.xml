@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ReactGram splash icon: the lightning bolt draws its outline, then its silver fill fades in while it grows slightly. -->
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="rg_splash"
+            android:width="320dp"
+            android:height="320dp"
+            android:viewportWidth="320"
+            android:viewportHeight="320">
+            <group
+                android:name="scaleme"
+                android:pivotX="160"
+                android:pivotY="160"
+                android:scaleX="0.85"
+                android:scaleY="0.85">
+                <path
+                    android:name="bolt_fill"
+                    android:pathData="M178,80 L118,168 L150,168 L132,240 L206,146 L172,146 Z"
+                    android:fillAlpha="0">
+                    <aapt:attr name="android:fillColor">
+                        <gradient
+                            android:type="linear"
+                            android:startX="118"
+                            android:startY="80"
+                            android:endX="206"
+                            android:endY="240">
+                            <item android:color="#FFFFFFFF" android:offset="0.0" />
+                            <item android:color="#FF9AA0AA" android:offset="0.55" />
+                            <item android:color="#FFE6E8EC" android:offset="1.0" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+                <path
+                    android:name="bolt_stroke"
+                    android:pathData="M178,80 L118,168 L150,168 L132,240 L206,146 L172,146 Z"
+                    android:strokeColor="#FFFFFFFF"
+                    android:strokeWidth="2.5"
+                    android:strokeLineJoin="round"
+                    android:trimPathStart="0"
+                    android:trimPathEnd="0" />
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="bolt_stroke">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:duration="600"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="bolt_fill">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="fillAlpha"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:startOffset="350"
+                android:duration="600"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="scaleme">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:valueFrom="0.85"
+                    android:valueTo="1"
+                    android:duration="950"
+                    android:interpolator="@android:interpolator/decelerate_cubic" />
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:valueFrom="0.85"
+                    android:valueTo="1"
+                    android:duration="950"
+                    android:interpolator="@android:interpolator/decelerate_cubic" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>
