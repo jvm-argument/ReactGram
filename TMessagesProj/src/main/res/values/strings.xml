@@ -11660,4 +11660,5 @@
     <string name="GlassReset">Reset glass settings</string>
     <string name="GlassInfo">Changes apply to the preview instantly and to panels and menus the next time they are drawn. Needs Android 13+ and Power Saving off for the glass effect.</string>
     <string name="GlassIgnoreBatterySaver">Keep glass on in power saving mode</string>
+    <string name="GlassBubble">Message bubble opacity</string>
 </resources>

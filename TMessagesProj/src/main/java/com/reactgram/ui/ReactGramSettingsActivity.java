@@ -89,7 +89,8 @@ public class ReactGramSettingsActivity extends BaseFragment {
         addSlider(context, R.string.GlassRefraction, 0f, 2f, () -> GlassTuning.refraction, v -> GlassTuning.refraction = v, true);
         addSlider(context, R.string.GlassThickness, 0.3f, 2f, () -> GlassTuning.thickness, v -> GlassTuning.thickness = v, true);
         addSlider(context, R.string.GlassRim, 0f, 2f, () -> GlassTuning.rim, v -> GlassTuning.rim = v, true);
-        addSlider(context, R.string.GlassSaturation, 0f, 1f, () -> GlassTuning.saturation, v -> GlassTuning.saturation = v, false);
+        addSlider(context, R.string.GlassSaturation, 0f, 1f, () -> GlassTuning.saturation, v -> GlassTuning.saturation = v, true);
+        addSlider(context, R.string.GlassBubble, 0.2f, 1f, () -> GlassTuning.bubbleOpacity, v -> GlassTuning.bubbleOpacity = v, false);
 
         final TextCheckCell batteryCell = new TextCheckCell(context);
         batteryCell.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));

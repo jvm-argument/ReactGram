@@ -147,7 +147,7 @@ public class LiteMode {
     }
 
     public static boolean isEnabled(int flag) {
-        if (flag == FLAG_LIQUID_GLASS && com.reactgram.ReactGramConfig.isGlassIgnoringBatterySaver()) {
+        if ((flag == FLAG_LIQUID_GLASS || flag == FLAG_CHAT_BLUR) && com.reactgram.ReactGramConfig.isGlassIgnoringBatterySaver()) {
             // ReactGram: only the user's own setting decides, automatic low-battery power saving does not
             return isEnabledSetting(flag);
         }

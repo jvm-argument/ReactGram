@@ -25,6 +25,7 @@ public final class ReactGramConfig {
         GlassTuning.thickness = p.getFloat("glassThickness", GlassTuning.DEFAULT_THICKNESS);
         GlassTuning.rim = p.getFloat("glassRim", GlassTuning.DEFAULT_RIM);
         GlassTuning.saturation = p.getFloat("glassSaturation", GlassTuning.DEFAULT_SATURATION);
+        GlassTuning.bubbleOpacity = p.getFloat("glassBubble", GlassTuning.DEFAULT_BUBBLE);
         ignoreBatterySaver = p.getBoolean("glassIgnoreBatterySaver", true);
         loaded = true;
     }
@@ -50,6 +51,7 @@ public final class ReactGramConfig {
             .putFloat("glassThickness", GlassTuning.thickness)
             .putFloat("glassRim", GlassTuning.rim)
             .putFloat("glassSaturation", GlassTuning.saturation)
+            .putFloat("glassBubble", GlassTuning.bubbleOpacity)
             .apply();
     }
 

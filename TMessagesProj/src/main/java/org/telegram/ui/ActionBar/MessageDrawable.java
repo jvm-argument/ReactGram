@@ -563,7 +563,15 @@ public class MessageDrawable extends Drawable {
             Drawable background = getBackgroundDrawable();
             if (background != null) {
                 background.setBounds(bounds);
-                background.draw(canvas);
+                final float glassK = com.reactgram.ui.BubbleGlass.opacity();
+                if (glassK < 1f) {
+                    final int a = background.getAlpha();
+                    background.setAlpha(Math.round(a * glassK));
+                    background.draw(canvas);
+                    background.setAlpha(a);
+                } else {
+                    background.draw(canvas);
+                }
                 return;
             }
         }
@@ -617,7 +625,15 @@ public class MessageDrawable extends Drawable {
             generatePath(path, bounds, padding, rad, smallRad, nearRad, top, drawFullBottom, drawFullTop, paintToUse != null);
         }
 
-        canvas.drawPath(path, p);
+        if (paintToUse == null && com.reactgram.ui.BubbleGlass.opacity() < 1f) {
+            final int pa = p.getAlpha();
+            p.setAlpha(Math.round(pa * com.reactgram.ui.BubbleGlass.opacity()));
+            canvas.drawPath(path, p);
+            p.setAlpha(pa);
+            com.reactgram.ui.BubbleGlass.drawRim(canvas, path, alpha);
+        } else {
+            canvas.drawPath(path, p);
+        }
         if (gradientShader != null && isSelected && paintToUse == null) {
             int color = getColor(Theme.key_chat_outBubbleGradientSelectedOverlay);
             selectedPaint.setColor(ColorUtils.setAlphaComponent(color, (int) (Color.alpha(color) * alpha / 255f)));

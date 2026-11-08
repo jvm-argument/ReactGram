@@ -293,4 +293,5 @@
     <string name="GlassReset">Сбросить настройки стекла</string>
     <string name="GlassInfo">Изменения сразу видны в предпросмотре, а в панелях и меню применяются при следующей отрисовке. Нужен Android 13+ и выключенное энергосбережение.</string>
     <string name="GlassIgnoreBatterySaver">Не отключать стекло при низком заряде</string>
+    <string name="GlassBubble">Прозрачность сообщений</string>
 </resources>
