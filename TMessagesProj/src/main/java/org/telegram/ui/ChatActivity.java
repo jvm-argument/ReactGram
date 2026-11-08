@@ -3404,6 +3404,7 @@ public class ChatActivity extends BaseFragment implements
     @Override
     public void onFragmentDestroy() {
         super.onFragmentDestroy();
+        com.reactgram.ui.BubbleGlass.clearChat(parentChatActivity != null ? parentChatActivity.contentView : contentView);
         if (messageMetricsView != null) {
             messageMetricsView.finish();
         }
@@ -4612,6 +4613,7 @@ public class ChatActivity extends BaseFragment implements
         glassBackgroundDrawableFactory.setSourceRootView(viewPositionWatcher, parentView);
         glassBackgroundDrawableFactoryFrosted.setSourceRootView(viewPositionWatcher, parentView);
         navbarContentDrawableFactory.setSourceRootView(viewPositionWatcher, parentView);
+        com.reactgram.ui.BubbleGlass.setChat(navbarContentSourceWallpaper, parentView);
         scrimBlur3Factory.setSourceRootView(viewPositionWatcher, parentView);
 
         if (headerItem != null) {
